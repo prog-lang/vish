@@ -43,6 +43,5 @@ func Eval(input string) (err error) {
 	if ran, err := RunSpecialCommand(command); ran {
 		return err
 	}
-	err = ExecCommand(command)
-	return
+	return ExecCommand(command)
 }
