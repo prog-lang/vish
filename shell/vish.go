@@ -18,9 +18,9 @@ func Start() {
 
 func REPL() {
 	input, err := Read()
-	Abort(err)
+	Alert(err)
 	result, err := Eval(input)
-	Abort(err)
+	Alert(err)
 	Print(result)
 }
 
@@ -32,7 +32,7 @@ func Read() (input string, err error) {
 
 func PrintPrefix() {
 	cwd, err := os.Getwd()
-	Abort(err)
+	Alert(err)
 	fmt.Printf("%s %s ",
 		aurora.Bold(aurora.Green(path.Base(cwd))),
 		aurora.Green("➜"))
@@ -47,18 +47,11 @@ func Eval(input string) (result []byte, err error) {
 	command := split[0]
 	args := split[1:]
 
-	if RunSpecialCommand(command, args) {
-		return
+	if ran, err := RunSpecialCommand(command, args); ran {
+		return nil, err
 	}
 	result, err = exec.Command(command, args...).Output()
 	return
-}
-
-func Abort(err error) {
-	if err != nil {
-		fmt.Println("ERROR:", err)
-		os.Exit(1)
-	}
 }
 
 func Print(result []byte) {

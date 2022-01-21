@@ -12,10 +12,13 @@ var commands = map[string]func([]string) error{
 	"exit":    exit,
 }
 
-func RunSpecialCommand(command string, args []string) (special bool) {
+func RunSpecialCommand(
+	command string,
+	args []string,
+) (special bool, err error) {
 	cmd, special := commands[command]
 	if special {
-		cmd(args)
+		err = cmd(args)
 	}
 	return
 }
