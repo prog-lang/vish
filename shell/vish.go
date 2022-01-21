@@ -34,7 +34,7 @@ func PrintPrefix() {
 	cwd, err := os.Getwd()
 	Abort(err)
 	fmt.Printf("%s %s ",
-		aurora.Green(path.Base(cwd)),
+		aurora.Bold(aurora.Green(path.Base(cwd))),
 		aurora.Green("➜"))
 }
 
