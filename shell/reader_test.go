@@ -7,13 +7,17 @@ import (
 )
 
 func TestReader(t *testing.T) {
-	r := NewReader(strings.NewReader("hello\\\nworld"))
-	input, err := r.Next()
-	assert.NoError(t, err)
-	assert.Equal(t, "hello world", input)
+	assertReaderOutput(t, "hello\\\nworld", "hello world")
+	assertReaderOutput(t, "hello\\\nworld\n", "hello world")
+}
 
-	r = NewReader(strings.NewReader("hello\\\nworld\n"))
-	input, err = r.Next()
+func assertReaderOutput(
+	t *testing.T,
+	input string,
+	expect string,
+) {
+	r := NewReader(strings.NewReader(input))
+	actual, err := r.Next()
 	assert.NoError(t, err)
-	assert.Equal(t, "hello world", input)
+	assert.Equal(t, expect, actual)
 }
