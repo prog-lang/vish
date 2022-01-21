@@ -3,6 +3,7 @@ package vish
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/logrusorgru/aurora"
@@ -14,6 +15,14 @@ func ParseCommand(input string) *Command {
 		return nil
 	}
 	return NewCommand(split[0], split[1:])
+}
+
+func ExecCommand(command *Command) (err error) {
+	cmd := exec.Command(command.Command, command.Args...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
 func Abort(err error) {

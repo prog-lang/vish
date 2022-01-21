@@ -3,7 +3,6 @@ package vish
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path"
 
 	"github.com/logrusorgru/aurora"
@@ -18,8 +17,7 @@ func Start() {
 func REPL() {
 	input, err := Read()
 	Alert(err)
-	result, err := Eval(input)
-	Print(result)
+	err = Eval(input)
 	Alert(err)
 }
 
@@ -37,19 +35,14 @@ func PrintPrefix() {
 		aurora.Green("➜"))
 }
 
-func Eval(input string) (result []byte, err error) {
+func Eval(input string) (err error) {
 	command := ParseCommand(input)
 	if command == nil {
 		return
 	}
 	if ran, err := RunSpecialCommand(command); ran {
-		return nil, err
+		return err
 	}
-	result, err = exec.Command(
-		command.Command, command.Args...).CombinedOutput()
+	ExecCommand(command)
 	return
-}
-
-func Print(result []byte) {
-	fmt.Println(string(result))
 }
