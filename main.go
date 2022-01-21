@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/sharpvik/vish/vish"
+	"github.com/sharpvik/vish/shell"
 )
 
 func main() {
