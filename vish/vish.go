@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
+
+	"github.com/logrusorgru/aurora"
 )
 
 func Start() {
@@ -22,22 +25,32 @@ func REPL() {
 }
 
 func Read() (input string, err error) {
-	fmt.Print("VISH ❯❯❯ ")
+	PrintPrefix()
 	input, err = NewReader(os.Stdin).Next()
 	return
 }
 
+func PrintPrefix() {
+	cwd, err := os.Getwd()
+	Abort(err)
+	fmt.Printf("%s %s ",
+		aurora.Green(path.Base(cwd)),
+		aurora.Green("➜"))
+}
+
 func Eval(input string) (result []byte, err error) {
 	split := strings.Fields(input)
+	if len(split) == 0 {
+		return
+	}
+
 	command := split[0]
 	args := split[1:]
 
 	if RunSpecialCommand(command, args) {
 		return
 	}
-
 	result, err = exec.Command(command, args...).Output()
-
 	return
 }
 
