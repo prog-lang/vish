@@ -3,12 +3,11 @@ package vish
 import (
 	"fmt"
 	"os"
-	"path"
-
-	"github.com/logrusorgru/aurora"
 )
 
 func Start() {
+	fmt.Println(ShortInfo())
+	fmt.Println(Welcome)
 	for {
 		REPL()
 	}
@@ -22,17 +21,9 @@ func REPL() {
 }
 
 func Read() (input string, err error) {
-	PrintPrefix()
+	fmt.Print(Prefix())
 	input, err = NewReader(os.Stdin).Next()
 	return
-}
-
-func PrintPrefix() {
-	cwd, err := os.Getwd()
-	Alert(err)
-	fmt.Printf("%s %s ",
-		aurora.Bold(aurora.Green(path.Base(cwd))),
-		aurora.Green("➜"))
 }
 
 func Eval(input string) (err error) {

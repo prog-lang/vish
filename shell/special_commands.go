@@ -34,7 +34,7 @@ func version(_ []string) (err error) {
 }
 
 func exit(args []string) (err error) {
-	fmt.Println("Bye! :)")
+	fmt.Println(GoodBye)
 	os.Exit(0)
 	return
 }
