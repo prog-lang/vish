@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"strings"
 
 	"github.com/logrusorgru/aurora"
 )
@@ -20,8 +19,8 @@ func REPL() {
 	input, err := Read()
 	Alert(err)
 	result, err := Eval(input)
-	Alert(err)
 	Print(result)
+	Alert(err)
 }
 
 func Read() (input string, err error) {
@@ -39,18 +38,15 @@ func PrintPrefix() {
 }
 
 func Eval(input string) (result []byte, err error) {
-	split := strings.Fields(input)
-	if len(split) == 0 {
+	command := ParseCommand(input)
+	if command == nil {
 		return
 	}
-
-	command := split[0]
-	args := split[1:]
-
-	if ran, err := RunSpecialCommand(command, args); ran {
+	if ran, err := RunSpecialCommand(command); ran {
 		return nil, err
 	}
-	result, err = exec.Command(command, args...).Output()
+	result, err = exec.Command(
+		command.Command, command.Args...).CombinedOutput()
 	return
 }
 
