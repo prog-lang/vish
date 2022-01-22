@@ -1,4 +1,4 @@
-package vish
+package shell
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ func ParseCommand(input string) *Command {
 	return NewCommand(split[0], split[1:])
 }
 
-func (shell *Vish) ExecCommand(command *Command) (err error) {
+func ExecCommand(command *Command) (err error) {
 	cmd := exec.Command(command.Command, command.Args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

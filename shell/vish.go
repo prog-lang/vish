@@ -1,4 +1,4 @@
-package vish
+package shell
 
 import (
 	"fmt"
@@ -17,19 +17,19 @@ func New() *Vish {
 	}
 }
 
-func (shell *Vish) Start() {
+func (vish *Vish) Start() {
 	fmt.Println(ShortInfo())
 	fmt.Println(Welcome)
-	go shell.manageSignals()
+	go vish.manageSignals()
 	for {
-		shell.REPL()
+		REPL()
 	}
 }
 
-func (shell *Vish) REPL() {
+func REPL() {
 	input, err := Read()
 	Alert(err)
-	err = shell.Eval(input)
+	err = Eval(input)
 	Alert(err)
 }
 
@@ -39,7 +39,7 @@ func Read() (input string, err error) {
 	return
 }
 
-func (shell *Vish) Eval(input string) (err error) {
+func Eval(input string) (err error) {
 	command := ParseCommand(input)
 	if command == nil {
 		return
@@ -47,5 +47,5 @@ func (shell *Vish) Eval(input string) (err error) {
 	if ran, err := RunSpecialCommand(command); ran {
 		return err
 	}
-	return shell.ExecCommand(command)
+	return ExecCommand(command)
 }

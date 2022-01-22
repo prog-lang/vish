@@ -1,4 +1,4 @@
-package vish
+package shell
 
 import (
 	"os"

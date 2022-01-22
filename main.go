@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	vish.New().Start()
+	shell.New().Start()
 }

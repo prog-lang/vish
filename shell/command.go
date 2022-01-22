@@ -1,4 +1,4 @@
-package vish
+package shell
 
 type Command struct {
 	Command string
