@@ -3,20 +3,33 @@ package vish
 import (
 	"fmt"
 	"os"
+	"os/exec"
 )
 
-func Start() {
-	fmt.Println(ShortInfo())
-	fmt.Println(Welcome)
-	for {
-		REPL()
+type Vish struct {
+	sigChan chan os.Signal
+	cmd     *exec.Cmd
+}
+
+func New() *Vish {
+	return &Vish{
+		sigChan: make(chan os.Signal, 1),
 	}
 }
 
-func REPL() {
+func (shell *Vish) Start() {
+	fmt.Println(ShortInfo())
+	fmt.Println(Welcome)
+	go shell.manageSignals()
+	for {
+		shell.REPL()
+	}
+}
+
+func (shell *Vish) REPL() {
 	input, err := Read()
 	Alert(err)
-	err = Eval(input)
+	err = shell.Eval(input)
 	Alert(err)
 }
 
@@ -26,7 +39,7 @@ func Read() (input string, err error) {
 	return
 }
 
-func Eval(input string) (err error) {
+func (shell *Vish) Eval(input string) (err error) {
 	command := ParseCommand(input)
 	if command == nil {
 		return
@@ -34,5 +47,5 @@ func Eval(input string) (err error) {
 	if ran, err := RunSpecialCommand(command); ran {
 		return err
 	}
-	return ExecCommand(command)
+	return shell.ExecCommand(command)
 }
