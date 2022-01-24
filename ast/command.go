@@ -1,4 +1,4 @@
-package shell
+package ast
 
 type Command struct {
 	Command string

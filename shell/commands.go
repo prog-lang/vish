@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path"
+
+	"github.com/sharpvik/vish/ast"
 )
 
 var commands = map[string]func([]string) error{
@@ -12,7 +14,7 @@ var commands = map[string]func([]string) error{
 	"exit":    exit,
 }
 
-func RunSpecialCommand(cmd *Command) (special bool, err error) {
+func RunSpecialCommand(cmd *ast.Command) (special bool, err error) {
 	command, special := commands[cmd.Command]
 	if special {
 		err = command(cmd.Args)
@@ -37,4 +39,14 @@ func exit(args []string) (err error) {
 	fmt.Println(GoodBye)
 	os.Exit(0)
 	return
+}
+
+// *** HELPERS ***
+
+func changeWdToHomeDir() (err error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return
+	}
+	return os.Chdir(home)
 }

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+
+	"github.com/sharpvik/vish/parser"
 )
 
 type Vish struct {
@@ -29,7 +31,14 @@ func (vish *Vish) Start() {
 func REPL() {
 	input, err := Read()
 	Alert(err)
-	err = Eval(input)
+
+	astree, err := parser.New().Parse(input)
+	if err != nil {
+		PrintError(err)
+		return
+	}
+
+	err = Eval(astree)
 	Alert(err)
 }
 
@@ -37,15 +46,4 @@ func Read() (input string, err error) {
 	fmt.Print(Prefix())
 	input, err = NewReader(os.Stdin).Next()
 	return
-}
-
-func Eval(input string) (err error) {
-	command := ParseCommand(input)
-	if command == nil {
-		return
-	}
-	if ran, err := RunSpecialCommand(command); ran {
-		return err
-	}
-	return ExecCommand(command)
 }
