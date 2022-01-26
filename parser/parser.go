@@ -29,5 +29,5 @@ func (p *Parser) parseCommand(input string) {
 	if len(split) == 0 {
 		return
 	}
-	p.astree = append(p.astree, ast.NewCommand(split[0], split[1:]))
+	p.astree = append(p.astree, ast.NewScript(split[0], split[1:]))
 }

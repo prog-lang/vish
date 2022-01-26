@@ -10,8 +10,8 @@ import (
 
 func TestParser(t *testing.T) {
 	assertParserOutput(t, "cd ..\necho hello", ast.AST{
-		ast.NewCommand("cd", []string{".."}),
-		ast.NewCommand("echo", []string{"hello"}),
+		ast.NewScript("cd", []string{".."}),
+		ast.NewScript("echo", []string{"hello"}),
 	})
 }
 

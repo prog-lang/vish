@@ -6,6 +6,7 @@ import (
 	"os/exec"
 
 	"github.com/sharpvik/vish/parser"
+	"github.com/sharpvik/vish/public"
 )
 
 type Vish struct {
@@ -20,8 +21,8 @@ func New() *Vish {
 }
 
 func (vish *Vish) Start() {
-	fmt.Println(ShortInfo())
-	fmt.Println(Welcome)
+	fmt.Println(public.ShortInfo())
+	fmt.Println(public.Welcome)
 	go vish.manageSignals()
 	for {
 		REPL()
@@ -38,12 +39,12 @@ func REPL() {
 		return
 	}
 
-	err = Eval(astree)
+	err = astree.Exec()
 	Alert(err)
 }
 
 func Read() (input string, err error) {
-	fmt.Print(Prefix())
+	fmt.Print(public.Prefix())
 	input, err = NewReader(os.Stdin).Next()
 	return
 }
