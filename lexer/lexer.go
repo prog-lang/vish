@@ -2,6 +2,7 @@ package lexer
 
 import (
 	"io"
+	"strings"
 
 	"github.com/sharpvik/vish/token"
 )
@@ -48,7 +49,21 @@ func (lex *Lexer) EOF() bool {
 	return lex.position.Index+1 >= len(lex.input)
 }
 
-func (lex *Lexer) eatIf(ok func(rune) bool) (one rune, err error) {
+func (lex *Lexer) eatWhile(ok Condition) (ate string, n int) {
+	var builder strings.Builder
+	for {
+		one, err := lex.eatIf(ok)
+		if err != nil {
+			ate = builder.String()
+			break
+		}
+		builder.WriteRune(one)
+		n++
+	}
+	return
+}
+
+func (lex *Lexer) eatIf(ok Condition) (one rune, err error) {
 	one, err = lex.peek()
 	if err != nil {
 		return

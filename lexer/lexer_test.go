@@ -13,6 +13,7 @@ import (
 func TestLexer(t *testing.T) {
 	testEat(t)
 	testEatIf(t)
+	testEatWhile(t)
 
 	t.SkipNow()
 	assertLexerOutput(
@@ -64,6 +65,24 @@ func testEatIf(t *testing.T) {
 	assert.Equal(t, 1, lex.position.Index)
 	assert.Equal(t, 2, lex.position.Line)
 	assert.Equal(t, 0, lex.position.Column)
+}
+
+func testEatWhile(t *testing.T) {
+	lex := NewFromString("hello\n")
+
+	ate, n := lex.eatWhile(unicode.IsSpace)
+	assert.Equal(t, 0, n)
+	assert.Equal(t, "", ate)
+	assert.Equal(t, -1, lex.position.Index)
+	assert.Equal(t, 1, lex.position.Line)
+	assert.Equal(t, 0, lex.position.Column)
+
+	ate, n = lex.eatWhile(unicode.IsLetter)
+	assert.Equal(t, 5, n)
+	assert.Equal(t, "hello", ate)
+	assert.Equal(t, 4, lex.position.Index)
+	assert.Equal(t, 1, lex.position.Line)
+	assert.Equal(t, 5, lex.position.Column)
 }
 
 func assertLexerOutput(
